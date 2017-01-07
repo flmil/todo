@@ -16,7 +16,18 @@ helpers do
 	end
 end
 
+before '/tasks' do
+	if current_user.nil?
+		redirect '/'
+	end
+end
+
 get '/' do
+	if current_user.nil?
+		@tasks = Tasks.none
+	else
+		@tasks = current_user.tasks
+	end
 	erb :index
 end
 
@@ -26,9 +37,9 @@ end
 
 post '/signup' do
 	user = User.create(
-		name:params[:name],
-		password:params[:password],
-		password_confirmation:params[:password_confirmation]
+		name:                  params[:name],
+		password:              params[:password],
+		password_confirmation: params[:password_confirmation]
 	)
 
 	if user.persisted?
@@ -55,3 +66,13 @@ get '/signout' do
 	session[:user] = nil
 	redirect '/'
 end
+
+get '/tasks/new' do
+	erb :new
+end
+
+post '/tasks' do
+	current_user.tasks.create(title: params[:title])
+	redirect '/'
+end
+

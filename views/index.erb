@@ -1,10 +1,25 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <title>タイトル</title>
-</head>
-<body>
+<div>
+	<div>
+		<div>
+			<table>
+				<thead>
+					<tr>
+						<th>タイトル</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% @tasks.each do |task| %>
+						<tr>
+							<td><%= CGI.escapeHTML(task.title) %></td>
+						</tr>
+					<% end %>
+					<tr>
+						<td colspan="6"><a href="/tasks/new">新しいtodo</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
 
-</body>
-</html>
+

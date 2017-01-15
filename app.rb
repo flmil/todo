@@ -3,7 +3,7 @@ Bundler.require
 require 'sinatra/reloader' if development?
 require 'sinatra'
 require 'sinatra/json'
-require './models.rb'
+require './models'
 require 'open-uri'
 require 'time'
 require 'sinatra/activerecord'
@@ -24,7 +24,7 @@ end
 
 get '/' do
 	if current_user.nil?
-		@tasks = Tasks.none
+		@tasks = Task.none
 	else
 		@tasks = current_user.tasks
 	end
@@ -75,4 +75,9 @@ post '/tasks' do
 	current_user.tasks.create(title: params[:title])
 	redirect '/'
 end
+
+
+
+
+
 

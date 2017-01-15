@@ -1,4 +1,5 @@
 require 'bundler/setup'
+#require './config'
 Bundler.require
 
 if development?
@@ -15,7 +16,8 @@ class User < ActiveRecord::Base
 	has_many :tasks
 end
 
-class Tasks < ActiveRecord::Base
+class Task < ActiveRecord::Base
+#class Tasks < ActiveRecord::Base	
 	validates :title,
 		presence: true
 	belongs_to :user

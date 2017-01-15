@@ -72,9 +72,50 @@ get '/tasks/new' do
 end
 
 post '/tasks' do
-	current_user.tasks.create(title: params[:title])
+#	date = params[:due_date].split('_')
+#	if Date.valid_date?(date[0].to_i, date[1].to_i, date[2].to_i)
+		current_user.tasks.create(title: params[:title],
+															due_date: Date.parse(params[:due_date]))
+		redirect '/'
+#	else
+#		redirect '/tasks/new'
+	end
+
+post '/tasks/:id/done' do
+	task = Task.find(params[:id])
+	task.completed = true
+	task.save
 	redirect '/'
 end
+
+get '/tasks/:id/star' do
+	task = Task.find(params[:id])
+	task.star = !task.star
+	task.save
+	redirect '/'
+end
+
+post '/tasks/:id/delete' do
+	task = Task.find(params[:id])
+	task.destroy
+
+	redirect '/'
+end
+
+get '/task/:id/edit' do
+	@task = Task.find(params[:id])
+
+	erb :edit
+end
+
+
+
+
+
+
+
+
+
 
 
 

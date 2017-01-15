@@ -21,6 +21,10 @@ class Task < ActiveRecord::Base
 	validates :title,
 		presence: true
 	belongs_to :user
+
+	def remained_days
+		return (due_date - Date.today).to_i
+	end
 end
 
 #unless ENV['RACK_ENV'] == 'production'

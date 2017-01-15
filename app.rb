@@ -23,10 +23,13 @@ before '/tasks' do
 end
 
 get '/' do
+	@lists = List.all
 	if current_user.nil?
 		@tasks = Task.none
-	else
+	elsif params[:list].nil? then
 		@tasks = current_user.tasks
+	else
+		@tasks = List.find(params[:list]).tasks.where(user_id: current_user.id)
 	end
 	erb :index
 end
@@ -72,14 +75,17 @@ get '/tasks/new' do
 end
 
 post '/tasks' do
-#	date = params[:due_date].split('_')
+	date = params[:due_date].split('_')
+	list = List.find(params[:list])
+
 #	if Date.valid_date?(date[0].to_i, date[1].to_i, date[2].to_i)
 		current_user.tasks.create(title: params[:title],
-															due_date: Date.parse(params[:due_date]))
+															due_date: Date.parse(params[:due_date]), list_id: list.id)
 		redirect '/'
 #	else
 #		redirect '/tasks/new'
-	end
+#	end
+end
 
 post '/tasks/:id/done' do
 	task = Task.find(params[:id])
@@ -106,6 +112,23 @@ get '/task/:id/edit' do
 	@task = Task.find(params[:id])
 
 	erb :edit
+end
+
+post '/tasks/:id' do
+	task = Task.find(params[:id])
+	list = List.find(params[:list])
+	date = params[:due_date].split('_')
+
+#	if Date.valid_date?(date[0].to_i, date[1].to_i, date[2].to_i)
+		task.title = CGI.escapeHTML(params[:title])
+		task.due_date = Date.parse(params[:due_date])
+		task.list_id = list.id
+		task.save
+
+		redirect '/'
+#	else
+#		redirect '/tasks/new'
+#	end
 end
 
 
